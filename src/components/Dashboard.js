@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 export function Dashboard() {
-  const [cids, setCids] = useState([]);
+  const [cids, setCids] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 

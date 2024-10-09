@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   setAccount,
   setErrorMessage,
-  setIsConnected,
+  setIsConnected, 
   setButtonText,
   fetchBalance,
 } from '../redux/walletSlice';
