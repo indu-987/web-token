@@ -31,7 +31,7 @@ const walletSlice = createSlice({
       state.errorMessage = action.payload;
     },
   },
-});
+});    
 
 // Action creators
 export const { setAccount, setBalance, setIsConnected, setButtonText, setErrorMessage } = walletSlice.actions;
