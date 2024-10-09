@@ -7,6 +7,7 @@ import {
   setButtonText,
   fetchBalance,
 } from '../redux/walletSlice';
+import Cookies from 'js-cookie';
 
 export function ConnectWallet() {
   const dispatch = useDispatch();
@@ -17,25 +18,31 @@ export function ConnectWallet() {
   const errorMessage = useSelector((state) => state.wallet.errorMessage);
   const buttonText = useSelector((state) => state.wallet.buttonText);
 
-  // Handle wallet connection
   const connectWalletHandler = () => {
     if (window.ethereum && window.ethereum.isMetaMask) {
       window.ethereum
         .request({ method: 'eth_requestAccounts' })
         .then((result) => {
-          dispatch(setAccount(result[0]));  // Set the connected account
-          dispatch(setIsConnected(true));   // Update connection status
-          dispatch(setButtonText('Wallet Connected'));  // Update button text
-          dispatch(fetchBalance(result[0])); // When the account is connected
+          const accountAddress = result[0];
+          
+          // Set Redux states for account and connection
+          dispatch(setAccount(accountAddress));
+          dispatch(setIsConnected(true));
+          dispatch(setButtonText('Wallet Connected'));
+          
+          // Immediately store the wallet address in cookies after connecting
+          Cookies.set('walletAddress', accountAddress, { expires: 7 });  // Store for 7 days
+  
+          // Then, fetch the balance (no need to wait for this to set cookies)
+          dispatch(fetchBalance(accountAddress));
         })
         .catch((error) => {
-          dispatch(setErrorMessage(error.message)); // Set any errors
+          dispatch(setErrorMessage(error.message)); // Handle errors
         });
     } else {
       dispatch(setErrorMessage('Please install MetaMask browser extension to interact'));
     }
   };
-
   // Update account when the wallet account changes
   const accountChangedHandler = (newAccount) => {
     dispatch(setAccount(newAccount));

@@ -1,5 +1,3 @@
-// src/components/UpdateMetadata.js
-
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateNFTMetadata } from '../redux/metadataSlice';
@@ -7,34 +5,46 @@ import { updateNFTMetadata } from '../redux/metadataSlice';
 export function UpdateMetadata() {
   const dispatch = useDispatch();
   const { transactionHash, errorMessage, updating } = useSelector((state) => state.metadata);
-  const [tokenId, setTokenId] = useState('');
-  const [newMetadata, setNewMetadata] = useState('');
+  
+  const [cid, setCid] = useState('');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
 
   const updateMetadataHandler = () => {
-    if (!tokenId || !newMetadata) {
-      alert('Please enter both token ID and new metadata.');
+    if (!cid || !name || !description) {
+      alert('Please enter all fields: CID, Name, and Description.');
       return;
     }
-    dispatch(updateNFTMetadata(tokenId, newMetadata));
+    dispatch(updateNFTMetadata(cid, name, description));
   };
 
   return (
     <div className="max-w-md mx-auto p-5 bg-white shadow-lg rounded-lg">
       <h4 className="text-lg font-bold mb-4">Update NFT Metadata</h4>
+      <p className="mb-4 text-gray-600">
+        Note: Pin the new version to IPFS (this is necessary because you cannot overwrite the old file).
+      </p>
 
       <input
         type="text"
-        placeholder="Token ID"
-        value={tokenId}
-        onChange={(e) => setTokenId(e.target.value)}
+        placeholder="IPFS CID"
+        value={cid}
+        onChange={(e) => setCid(e.target.value)}
         className="mb-4 p-2 border border-gray-300 rounded-md w-full"
       />
 
       <input
         type="text"
-        placeholder="New Metadata (IPFS URL)"
-        value={newMetadata}
-        onChange={(e) => setNewMetadata(e.target.value)}
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className="mb-4 p-2 border border-gray-300 rounded-md w-full"
+      />
+
+      <textarea
+        placeholder="Description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
         className="mb-4 p-2 border border-gray-300 rounded-md w-full"
       />
 

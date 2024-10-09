@@ -1,5 +1,3 @@
-// src/components/MintNFT.js
-
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { mintNFT } from '../redux/nftSlice';
@@ -7,7 +5,10 @@ import { mintNFT } from '../redux/nftSlice';
 export function MintNFT() {
   const dispatch = useDispatch();
   const { minting, transactionHash, errorMessage, cid, tokenId } = useSelector((state) => state.nft);
+  
   const [imageFile, setImageFile] = useState(null);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -19,11 +20,11 @@ export function MintNFT() {
   };
 
   const mintNFTHandler = () => {
-    if (!imageFile) {
-      alert('Please upload an image');
+    if (!imageFile || !name || !description) {
+      alert('Please upload an image, and enter a name and description.');
       return;
     }
-    dispatch(mintNFT(imageFile));
+    dispatch(mintNFT(imageFile, name, description)); // Pass the name and description to the mintNFT action
   };
 
   const copyCidToClipboard = () => {
@@ -36,6 +37,21 @@ export function MintNFT() {
   return (
     <div className="max-w-md mx-auto p-5 bg-white shadow-lg rounded-lg">
       <h4 className="text-lg font-bold mb-4">Mint NFT</h4>
+
+      <input
+        type="text"
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className="mb-4 p-2 border border-gray-300 rounded-md w-full"
+      />
+
+      <textarea
+        placeholder="Description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        className="mb-4 p-2 border border-gray-300 rounded-md w-full"
+      />
 
       <input
         type="file"
